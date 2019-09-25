@@ -1,7 +1,5 @@
-﻿using Contabily.Extensions.Exceptions;
-using Contabily.Models.Entities.Base;
-using Contabily.Models.Repository.Interfaces;
-using Contabily.Models.Security;
+﻿using KuuhakuFramework.Web.Models.BaseEntities;
+using KuuhakuFramework.Web.Models.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,14 +10,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Contabily.Models.Repository.Base
+namespace KuuhakuFramework.Web.Models.Repository
 {
-    public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, IBaseEntity
+    public abstract class BaseRepository<TEntity, TContext> : IRepository<TEntity> where TEntity : class, IEntity where TContext : KuuhakuContext
     {
-        protected DbSet<TEntity> Entities { get; }
-        protected ModelContext Context { get; }
+        protected abstract DbSet<TEntity> Entities { get; }
+        protected TContext Context { get; }
 
-        protected BaseRepository(ModelContext context)
+        protected BaseRepository(TContext context)
         {
             Context = context;
         }
@@ -39,16 +37,11 @@ namespace Contabily.Models.Repository.Base
             entity.EditionUser = ((ClaimsPrincipal)userContext.Principal).Claims.FirstOrDefault().Value;
         }
 
-        protected virtual IQueryable<TEntity> GetEntities()
-        {
-            return Entities;
-        }
-
         public virtual async Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<IQueryable<TEntity>, IQueryable<TEntity>>> filter, IUserContext userContext, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, CancellationToken ct = default)
         {
             return await Task.Run(() =>
             {
-                var query = GetEntities();
+                var query = (IQueryable<TEntity>)Entities;
 
                 if (filter == null) filter = x => x;
                 query = filter.Compile()(query);
@@ -64,7 +57,7 @@ namespace Contabily.Models.Repository.Base
         {
             return await Task.Run(() =>
             {
-                var query = GetEntities();
+                var query = (IQueryable<TEntity>)Entities;
 
                 if (filter == null) filter = x => true;
                 query = query.Where(filter);
@@ -80,7 +73,7 @@ namespace Contabily.Models.Repository.Base
         {
             return await Task.Run(async () =>
             {
-                var query = GetEntities();
+                var query = (IQueryable<TEntity>)Entities;
 
                 query = query.Where(filter);
 
@@ -88,7 +81,7 @@ namespace Contabily.Models.Repository.Base
                 {
                     return await query.SingleAsync(ct);
                 }
-                catch { throw new QueryException("Não foi possivel localizar apenas um valor que satifaz a condição"); }
+                catch { throw new QueryException(); }
             }, ct);
         }
 
@@ -96,9 +89,9 @@ namespace Contabily.Models.Repository.Base
         {
             try
             {
-                return await GetEntities().SingleAsync(x => x.Id == id, ct);
+                return await ((IQueryable<TEntity>)Entities).SingleAsync(x => x.Id == id, ct);
             }
-            catch { throw new QueryException("Não foi possivel localizar apenas um valor que satifaz a condição"); }
+            catch { throw new QueryException(); }
         }
 
         public virtual async Task<TEntity> CreateNewAsync(IUserContext userContext, CancellationToken ct = default)
@@ -164,7 +157,7 @@ namespace Contabily.Models.Repository.Base
                 {
                     toRemove = await Entities.SingleAsync(x => x.Id == id);
                 }
-                catch { throw new QueryException("Não foi possivel localizar apenas um valor que satifaz a condição"); }
+                catch { throw new QueryException(); }
 
                 Entities.Remove(toRemove);
 
@@ -182,7 +175,7 @@ namespace Contabily.Models.Repository.Base
                 {
                     try
                     {
-                        if (!int.TryParse(sid, out int id)) throw new FormatException("Não é possivel converter os ids fornecidos em numeros");
+                        if (!int.TryParse(sid, out int id)) throw new FormatException("Não é possível converter os ids fornecidos em números");
                         var toRemove = await Entities.SingleAsync(x => x.Id == id, ct);
                         Entities.Remove(toRemove);
                     }
@@ -193,6 +186,6 @@ namespace Contabily.Models.Repository.Base
                 if (toReturn.Count == 0) return null;
                 return string.Join(',', toReturn);
             }, ct);
-        }        
+        }
     }
 }

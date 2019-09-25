@@ -1,4 +1,5 @@
 ﻿using KuuhakuFramework.Web.Models.Configuration;
+using KuuhakuFramework.Web.Models.Location;
 using KuuhakuFramework.Web.Models.Security.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,10 @@ namespace KuuhakuFramework.Web.Models
         public KuuhakuContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Menu> Menus { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<City> Cities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

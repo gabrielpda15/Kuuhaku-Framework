@@ -1,5 +1,4 @@
-﻿using Contabily.Models.Entities.Base;
-using Contabily.Models.Repository.Interfaces;
+﻿using KuuhakuFramework.Web.Models.Attributes;
 using KuuhakuFramework.Web.Models.BaseEntities;
 using System;
 using System.Collections.Generic;
