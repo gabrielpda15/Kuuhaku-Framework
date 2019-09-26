@@ -18,27 +18,26 @@ namespace KuuhakuFramework.Extensions
             var propInput = input.GetType().GetProperties();
             var propOutput = result.GetType().GetProperties();
 
-            var map = new
+            var mapOutput = propInput.ForEach(i =>
             {
-                PropCommonInput = propOutput.ForEach(i =>
-                {
-                    var match = propInput.Where(o => i.Compare(o));
-                    if (match.Count() == 1)
-                        return match.Single();
-                    return null;
-                }, (a, b) => { a.Add(b); return a; }, k => k.ToArray(), new List<PropertyInfo>()),
-                PropCommonOutput = propInput.ForEach(i =>
-                {
-                    var match = propOutput.Where(o => i.Compare(o));
-                    if (match.Count() == 1)
-                        return match.Single();
-                    return null;
-                }, (a, b) => { a.Add(b); return a; }, k => k.ToArray(), new List<PropertyInfo>())
-            };
+                var match = propOutput.Where(o => i.Compare(o));
+                if (match.Count() == 1)
+                    return match.Single();
+                return null;
+            }, (a, b) => { a.Add(b); return a; }, k => k.Where(x => x != null).ToArray(), new List<PropertyInfo>());
 
-            for (int i = 0; i < map.PropCommonInput.Length; i++)
+            var mapInput = mapOutput.ForEach(i =>
             {
-                map.PropCommonOutput[i].SetValue(result, map.PropCommonInput[i].GetValue(input));
+                var match = propInput.Where(o => i.Compare(o));
+                if (match.Count() == 1)
+                    return match.Single();
+                return null;
+            }, (a, b) => { a.Add(b); return a; }, k => k.Where(x => x != null).ToArray(), new List<PropertyInfo>());
+
+            for (int i = 0; i < mapOutput.Length; i++)
+            {
+                var value = mapInput[i].GetValue(input);
+                mapOutput[i].SetValue(result, value);
             }
 
             return result;
