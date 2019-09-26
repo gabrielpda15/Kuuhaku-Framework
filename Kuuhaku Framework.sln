@@ -5,6 +5,16 @@ VisualStudioVersion = 16.0.29230.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KuuhakuFramework.Web", "KuuhakuFramework.Web.Models\KuuhakuFramework.Web.csproj", "{C097573C-49F9-4C97-B51D-4CE30AB66B5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KuuhakuFramework.ChoiceTree", "KuuhakuFramework.ChoiceTree\KuuhakuFramework.ChoiceTree.csproj", "{D368D50B-E5A5-48CC-9E0A-C29737A8500B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KuuhakuFramework.Extensions", "KuuhakuFramework.Extensions\KuuhakuFramework.Extensions.csproj", "{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4FD92899-1FB6-465A-B601-D0B183139A89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KuuhakuFramework.Extensions.Core", "KuuhakuFramework.Extensions.Core\KuuhakuFramework.Extensions.Core.csproj", "{8FDCEA67-AED2-4D4C-88A2-079F6788E816}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KuuhakuFramework.Security.Cryptography", "KuuhakuFramework.Security.Cryptography\KuuhakuFramework.Security.Cryptography.csproj", "{370514A9-50D5-4CFD-8444-D6594735520B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +25,29 @@ Global
 		{C097573C-49F9-4C97-B51D-4CE30AB66B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C097573C-49F9-4C97-B51D-4CE30AB66B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C097573C-49F9-4C97-B51D-4CE30AB66B5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D368D50B-E5A5-48CC-9E0A-C29737A8500B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D368D50B-E5A5-48CC-9E0A-C29737A8500B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D368D50B-E5A5-48CC-9E0A-C29737A8500B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D368D50B-E5A5-48CC-9E0A-C29737A8500B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FDCEA67-AED2-4D4C-88A2-079F6788E816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FDCEA67-AED2-4D4C-88A2-079F6788E816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FDCEA67-AED2-4D4C-88A2-079F6788E816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FDCEA67-AED2-4D4C-88A2-079F6788E816}.Release|Any CPU.Build.0 = Release|Any CPU
+		{370514A9-50D5-4CFD-8444-D6594735520B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{370514A9-50D5-4CFD-8444-D6594735520B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{370514A9-50D5-4CFD-8444-D6594735520B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{370514A9-50D5-4CFD-8444-D6594735520B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C57ECFA4-8F2E-4948-82CF-15239D3B7A6F} = {4FD92899-1FB6-465A-B601-D0B183139A89}
+		{8FDCEA67-AED2-4D4C-88A2-079F6788E816} = {4FD92899-1FB6-465A-B601-D0B183139A89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1C393EB-6B98-4634-BF84-2226BB0540D1}
