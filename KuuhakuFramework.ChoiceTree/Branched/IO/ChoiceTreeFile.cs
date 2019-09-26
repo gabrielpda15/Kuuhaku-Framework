@@ -30,6 +30,31 @@ namespace KuuhakuFramework.ChoiceTree.Branched.IO
             ChoiceTree = choiceTree;
         }
 
+        protected ChoiceTreeDTO GetChoiceTreeDTO()
+        {
+            return ChoiceTree.Map(x => new ChoiceTreeDTO
+            {
+                Name = x.Name,
+                Description = x.Description,
+                EntryPoint = x.EntryPoint,
+                Choices = x.Choices.ForEach(y => y.Value.Map(new ChoiceDTO(y.Key)), new List<ChoiceDTO>()),
+                Events = x.Events.ForEach(y => y.Value.Map(new EventDTO(y.Key)), new List<EventDTO>()),
+                VarChoices = x.VarChoices.ForEach(y => y.Value.Map(new VarChoiceDTO(y.Key)), new List<VarChoiceDTO>()),
+                CustomVars = x.CustomVars
+            });
+        }
+
+        protected ChoiceTree GetChoiceTree(ChoiceTreeDTO dTO)
+        {
+            var choiceTree = new ChoiceTree(dTO.Name, dTO.Description);
+            choiceTree.EntryPoint = dTO.EntryPoint;
+            choiceTree.CustomVars = dTO.CustomVars;
+            dTO.Choices.ForEach(x => choiceTree.AddChoice(x.Map(new Choice(x.Text))));
+            dTO.Events.ForEach(x => choiceTree.AddEvent(x.Map(new Event(x.Text))));
+            dTO.VarChoices.ForEach(x => choiceTree.AddVarChoice(x.Map(new VarChoice(x.Text, x.VarName))));
+            return choiceTree;
+        }
+
         public void WriteBytes(string file)
         {
             if (File.Exists(file)) File.Delete(file);
@@ -45,14 +70,7 @@ namespace KuuhakuFramework.ChoiceTree.Branched.IO
                     var phrase = Phraser.GenerateBytePhrase(length: PhraseLength);
                     bw.Write(phrase);
 
-                    var choiceTree = ChoiceTree.Map(x => new
-                    {
-                        x.Name, x.Description, x.EntryPoint,
-                        Choices = x.Choices.ForEach(y => y.Value.Map(new ChoiceDTO(y.Key)), new List<ChoiceDTO>()),
-                        Events = x.Events.ForEach(y => y.Value.Map(new EventDTO(y.Key)), new List<EventDTO>()),
-                        VarChoices = x.VarChoices.ForEach(y => y.Value.Map(new VarChoiceDTO(y.Key)), new List<VarChoiceDTO>()),
-                        x.CustomVars
-                    });
+                    var choiceTree = GetChoiceTreeDTO();
 
                     var text = JsonConvert.SerializeObject(choiceTree, Formatting.None);
 
@@ -85,8 +103,35 @@ namespace KuuhakuFramework.ChoiceTree.Branched.IO
 
                     var data = br.ReadBytes((int)size - HeaderSize);
                     var json = Cryptor.DecryptBytes(data, phrase).ToUTF8();
-                    var result = JsonConvert.DeserializeObject(json);
+                    var result = JsonConvert.DeserializeObject<ChoiceTreeDTO>(json);
+
+                    ChoiceTree = GetChoiceTree(result);
                 }
+            }
+        }
+
+        public void WriteJson(string file)
+        {
+            if (File.Exists(file)) File.Delete(file);
+
+            var json = JsonConvert.SerializeObject(GetChoiceTreeDTO(), Formatting.Indented);
+            File.WriteAllText(file, json, Encoding.UTF8);
+        }
+
+        public void ReadJson(string file)
+        {
+            if (!File.Exists(file)) throw new FileNotFoundException("Não foi possivel localizar o arquivo designado", file);
+
+            try
+            {
+                var text = File.ReadAllText(file, Encoding.UTF8);
+
+                var result = JsonConvert.DeserializeObject<ChoiceTreeDTO>(text);
+                ChoiceTree = GetChoiceTree(result);
+            }
+            catch (JsonException ex)
+            {
+                throw new NotSupportedException("Esse arquivo não é um json suportado", ex);
             }
         }
     }
