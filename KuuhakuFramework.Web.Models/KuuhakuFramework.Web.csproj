@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Location\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>
